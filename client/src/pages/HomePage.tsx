@@ -1,15 +1,18 @@
 import { useState, useEffect } from "react";
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
 import { trpc } from "@/lib/trpc";
+import { useAuth } from "@/_core/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Search, BookOpen, TrendingUp, Clock, Heart } from "lucide-react";
+import { Search, BookOpen, TrendingUp, Clock, Heart, Shield } from "lucide-react";
 
 export default function HomePage() {
   const [searchQuery, setSearchQuery] = useState("");
+  const [, setLocation] = useLocation();
+  const { user } = useAuth();
   
   // Fetch manga data
   const { data: popularManga, isLoading: loadingPopular } = trpc.manga.getPopular.useQuery({ limit: 6 });
@@ -38,11 +41,19 @@ export default function HomePage() {
               <Link href="/profile"><a className="text-sm font-medium hover:text-indigo-600 transition-colors">الملف الشخصي</a></Link>
             </nav>
 
-            <Button variant="default" asChild>
-              <Link href="/login">
-                <a>تسجيل الدخول</a>
-              </Link>
-            </Button>
+            <div className="flex items-center gap-2">
+              {user?.role === "admin" && (
+                <Button variant="outline" onClick={() => setLocation("/admin")}>
+                  <Shield className="h-4 w-4 ml-2" />
+                  لوحة التحكم
+                </Button>
+              )}
+              <Button variant="default" asChild>
+                <Link href="/login">
+                  <a>تسجيل الدخول</a>
+                </Link>
+              </Button>
+            </div>
           </div>
         </div>
       </header>
