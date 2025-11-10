@@ -5,12 +5,19 @@ import { Route, Switch } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import Home from "./pages/Home";
+import HomePage from "./pages/HomePage";
+import MangaDetail from "./pages/MangaDetail";
+import ReadChapter from "./pages/ReadChapter";
+import Favorites from "./pages/Favorites";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
   return (
-    <Switch>
-      <Route path={"/"} component={Home} />
+    <Switch>      <Route path={"/"} component={HomePage} />
+      <Route path={"/manga/:id"} component={MangaDetail} />
+      <Route path={"/read/:id"} component={ReadChapter} />
+      <Route path={"/favorites"} component={Favorites} />
+      <Route path={"/old"} component={Home} />
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />
