@@ -141,3 +141,11 @@
 - [x] إعداد بناء APK تلقائي
 - [x] رفع الكود على GitHub
 - [x] إنشاء GITHUB_ACTIONS_GUIDE.md
+
+## المرحلة 24: بناء APK محلياً
+- [ ] تثبيت JDK و Android SDK
+- [ ] بناء التطبيق الويب
+- [ ] مزامنة Capacitor
+- [ ] بناء APK
+- [ ] اختبار APK
+- [ ] رفع APK على GitHub Releases

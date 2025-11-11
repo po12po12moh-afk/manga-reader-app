@@ -35,7 +35,15 @@ jobs:
       run: pnpm install
       
     - name: Build web app
-      run: pnpm build
+      run: pnpm run build
+      env:
+        NODE_ENV: production
+      
+    - name: Copy dist to root for Capacitor
+      run: |
+        mkdir -p dist
+        cp -r client/dist/* dist/ || echo "Using existing dist"
+        ls -la dist/
       
     - name: Sync Capacitor
       run: npx cap sync android
