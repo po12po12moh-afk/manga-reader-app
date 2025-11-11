@@ -133,3 +133,11 @@
 - [x] إنشاء QUICK_START.md
 - [x] إنشاء README.md شامل
 - [x] تحديث دليل البناء
+
+## المرحلة 23: رفع المشروع على GitHub
+- [ ] إنشاء GitHub repository
+- [ ] إعداد .gitignore
+- [ ] إنشاء GitHub Actions workflow
+- [ ] إعداد بناء APK تلقائي
+- [ ] رفع الكود على GitHub
+- [ ] اختبار البناء التلقائي
