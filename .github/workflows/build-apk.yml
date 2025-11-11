@@ -35,7 +35,12 @@ jobs:
       run: pnpm install
       
     - name: Build web app
-      run: pnpm build
+      run: pnpm run build
+      env:
+        NODE_ENV: production
+      
+    - name: Create dist directory if not exists
+      run: mkdir -p client/dist
       
     - name: Sync Capacitor
       run: npx cap sync android
