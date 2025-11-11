@@ -26,6 +26,11 @@ export default function AdminPanel() {
   const [scrapeSource, setScrapeSource] = useState("example");
   const [isLoading, setIsLoading] = useState(false);
   const [scrapeResult, setScrapeResult] = useState<any>(null);
+  
+  // Olympustaff import states
+  const [olympusSlug, setOlympusSlug] = useState("");
+  const [maxChapters, setMaxChapters] = useState<number>(5);
+  const importMutation = trpc.scraper.importFromOlympus.useMutation();
 
   const scrapeManga = trpc.scraper.scrapeMangaDetails.useMutation({
     onSuccess: (data) => {

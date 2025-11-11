@@ -2,6 +2,13 @@ import { z } from "zod";
 import { protectedProcedure, router } from "../_core/trpc";
 import { TRPCError } from "@trpc/server";
 import { createScraper } from "../scraper/mangaScraper";
+import {
+  scrapeOlympusMangaList,
+  scrapeOlympusMangaDetails,
+  scrapeOlympusChapters,
+  scrapeOlympusChapterPages,
+  importMangaFromOlympus,
+} from "../scraper/olympusstaffScraper";
 
 /**
  * Scraper router - Admin only
@@ -114,6 +121,84 @@ export const scraperRouter = router({
         success: true,
         message: "Scraper test endpoint - implement custom logic here",
         url: input.url,
+      };
+    }),
+
+  // Olympustaff.com scraper endpoints
+  olympusListManga: protectedProcedure.query(async ({ ctx }) => {
+    if (ctx.user.role !== "admin") {
+      throw new TRPCError({
+        code: "FORBIDDEN",
+        message: "Only admins can access scraper",
+      });
+    }
+    return await scrapeOlympusMangaList();
+  }),
+
+  olympusMangaDetails: protectedProcedure
+    .input(z.object({ slug: z.string() }))
+    .query(async ({ input, ctx }) => {
+      if (ctx.user.role !== "admin") {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "Only admins can access scraper",
+        });
+      }
+      return await scrapeOlympusMangaDetails(input.slug);
+    }),
+
+  olympusChapters: protectedProcedure
+    .input(z.object({ slug: z.string() }))
+    .query(async ({ input, ctx }) => {
+      if (ctx.user.role !== "admin") {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "Only admins can access scraper",
+        });
+      }
+      return await scrapeOlympusChapters(input.slug);
+    }),
+
+  olympusChapterPages: protectedProcedure
+    .input(z.object({ slug: z.string(), chapterNumber: z.number() }))
+    .query(async ({ input, ctx }) => {
+      if (ctx.user.role !== "admin") {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "Only admins can access scraper",
+        });
+      }
+      return await scrapeOlympusChapterPages(input.slug, input.chapterNumber);
+    }),
+
+  importFromOlympus: protectedProcedure
+    .input(
+      z.object({
+        slug: z.string(),
+        maxChapters: z.number().optional(),
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      if (ctx.user.role !== "admin") {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "Only admins can import manga",
+        });
+      }
+
+      const { manga, chapters } = await importMangaFromOlympus(
+        input.slug,
+        input.maxChapters
+      );
+
+      // TODO: حفظ البيانات في قاعدة البيانات
+      // يمكنك إضافة الكود هنا لحفظ المانجا والفصول في قاعدة البيانات
+
+      return {
+        success: true,
+        manga,
+        chaptersCount: chapters.length,
+        totalPages: chapters.reduce((sum, c) => sum + c.pages.length, 0),
       };
     }),
 });
