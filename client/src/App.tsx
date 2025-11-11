@@ -10,6 +10,7 @@ import MangaDetail from "./pages/MangaDetail";
 import ReadChapter from "./pages/ReadChapter";
 import Favorites from "./pages/Favorites";
 import AdminPanel from "./pages/AdminPanel";
+import FirebaseSetup from "./pages/FirebaseSetup";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -18,7 +19,8 @@ function Router() {
       <Route path={"/manga/:id"} component={MangaDetail} />
       <Route path={"/read/:id"} component={ReadChapter} />
       <Route path={"/favorites"} component={Favorites} />
-      <Route path={"/admin"} component={AdminPanel} />
+      <Route path="/admin" component={AdminPanel} />
+      <Route path="/firebase-setup" component={FirebaseSetup} />
       <Route path={"/old"} component={Home} />
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}

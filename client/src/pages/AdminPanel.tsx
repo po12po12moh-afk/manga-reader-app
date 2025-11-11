@@ -14,7 +14,8 @@ import {
   Shield,
   AlertCircle,
   CheckCircle2,
-  Loader2
+  Loader2,
+  Bell
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -93,7 +94,14 @@ export default function AdminPanel() {
             <Shield className="h-5 w-5 text-indigo-600" />
             <h1 className="text-xl font-bold">لوحة التحكم</h1>
           </div>
-          <div className="w-20" />
+          <Button 
+            variant="outline" 
+            onClick={() => setLocation("/firebase-setup")}
+            className="gap-2"
+          >
+            <Bell className="h-4 w-4" />
+            إعداد Firebase
+          </Button>
         </div>
       </header>
 
