@@ -105,3 +105,20 @@ temp/
 *.db
 *.sqlite
 *.sqlite3
+
+# Android
+android/app/build/
+android/build/
+android/.gradle/
+android/local.properties
+android/.cxx/
+*.apk
+*.aab
+*.keystore
+
+# Capacitor
+.capacitor/
+ios/
+
+# Screenshots
+screenshots/
