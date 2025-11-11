@@ -1,4 +1,4 @@
-import { int, mysqlEnum, mysqlTable, text, timestamp, varchar, boolean, float } from "drizzle-orm/mysql-core";
+import { int, mysqlEnum, mysqlTable, text, timestamp, varchar, boolean, float, json } from "drizzle-orm/mysql-core";
 import { relations } from "drizzle-orm";
 
 /**
@@ -200,4 +200,62 @@ export const genresRelations = relations(genres, ({ many }) => ({
 export const usersRelations = relations(users, ({ many }) => ({
   favorites: many(favorites),
   readingHistory: many(readingHistory),
+  fcmTokens: many(fcmTokens),
+  notifications: many(notifications),
+}));
+
+/**
+ * FCM Tokens table - stores device tokens for push notifications
+ */
+export const fcmTokens = mysqlTable("fcm_tokens", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  token: varchar("token", { length: 255 }).notNull().unique(),
+  deviceType: varchar("deviceType", { length: 50 }),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type FcmToken = typeof fcmTokens.$inferSelect;
+export type InsertFcmToken = typeof fcmTokens.$inferInsert;
+
+/**
+ * Notifications table - stores sent notifications history
+ */
+export const notifications = mysqlTable("notifications", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId"),
+  title: varchar("title", { length: 255 }).notNull(),
+  body: text("body").notNull(),
+  imageUrl: varchar("imageUrl", { length: 500 }),
+  data: json("data"),
+  sentAt: timestamp("sentAt").defaultNow().notNull(),
+  readAt: timestamp("readAt"),
+  mangaId: int("mangaId"),
+  chapterId: int("chapterId"),
+});
+
+export type Notification = typeof notifications.$inferSelect;
+export type InsertNotification = typeof notifications.$inferInsert;
+
+export const fcmTokensRelations = relations(fcmTokens, ({ one }) => ({
+  user: one(users, {
+    fields: [fcmTokens.userId],
+    references: [users.id],
+  }),
+}));
+
+export const notificationsRelations = relations(notifications, ({ one }) => ({
+  user: one(users, {
+    fields: [notifications.userId],
+    references: [users.id],
+  }),
+  manga: one(manga, {
+    fields: [notifications.mangaId],
+    references: [manga.id],
+  }),
+  chapter: one(chapters, {
+    fields: [notifications.chapterId],
+    references: [chapters.id],
+  }),
 }));
